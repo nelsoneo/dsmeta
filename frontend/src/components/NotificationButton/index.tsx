@@ -1,5 +1,5 @@
 import iconNotification from '../../assets/img/nitification-icon.svg';
-import './index.css';
+import './styles.css';
 function NotificationButton() {
   return (
     <div className="dsmeta-red-btn">
