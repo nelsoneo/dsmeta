@@ -16,14 +16,15 @@ function SalesCard() {
   const [sales, setSales] = useState<Sale[]>([]);
 
   useEffect(() => {
+    const dmin = minDate.toISOString().slice(0, 10);
+    const dmax = maxDate.toISOString().slice(0, 10);
 
-    const dmin = minDate.toISOString().slice(0,10)
-    const dmax = maxDate.toISOString().slice(0,10)
-    
-    axios.get(`${BASE_URL}/sales?minDate=${dmin}&maxDate${dmax}`).then((response) => {
-      setSales(response.data.content);
-    });
-  },[minDate, maxDate]);
+    axios
+      .get(`${BASE_URL}/sales?minDate=${dmin}&maxDate${dmax}`)
+      .then((response) => {
+        setSales(response.data.content);
+      });
+  }, [minDate, maxDate]);
 
   return (
     <div className="dsmeta-card">
@@ -65,14 +66,16 @@ function SalesCard() {
               return (
                 <tr key={item.id}>
                   <td className="show992">{item.id}</td>
-                  <td className="show576">{new Date(item.date).toLocaleDateString()}</td>
+                  <td className="show576">
+                    {new Date(item.date).toLocaleDateString()}
+                  </td>
                   <td>{item.sellerName}</td>
                   <td className="show992">{item.visited}</td>
                   <td className="show992">{item.deals}</td>
                   <td>R$ {item.amount.toFixed(2)}</td>
                   <td>
                     <div className="dsmeta-red-btn-container">
-                      <NotificationButton saleId = {item.id}/>
+                      <NotificationButton saleId={item.id} />
                     </div>
                   </td>
                 </tr>
