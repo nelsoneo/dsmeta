@@ -2,7 +2,7 @@ import NotificationButton from "../NotificationButton";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./styles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../utils/request";
 import { Sale } from "../../models/sale";
@@ -15,11 +15,15 @@ function SalesCard() {
 
   const [sales, setSales] = useState<Sale[]>([]);
 
-  useState(() => {
-    axios.get(`${BASE_URL}/sales`).then((response) => {
+  useEffect(() => {
+
+    const dmin = minDate.toISOString().slice(0,10)
+    const dmax = maxDate.toISOString().slice(0,10)
+    
+    axios.get(`${BASE_URL}/sales?minDate=${dmin}&maxDate${dmax}`).then((response) => {
       setSales(response.data.content);
     });
-  });
+  },[minDate, maxDate]);
 
   return (
     <div className="dsmeta-card">
@@ -63,12 +67,12 @@ function SalesCard() {
                   <td className="show992">{item.id}</td>
                   <td className="show576">{new Date(item.date).toLocaleDateString()}</td>
                   <td>{item.sellerName}</td>
-                  <td className="show992">{item.deals}</td>
                   <td className="show992">{item.visited}</td>
+                  <td className="show992">{item.deals}</td>
                   <td>R$ {item.amount.toFixed(2)}</td>
                   <td>
                     <div className="dsmeta-red-btn-container">
-                      <NotificationButton />
+                      <NotificationButton saleId = {item.id}/>
                     </div>
                   </td>
                 </tr>
